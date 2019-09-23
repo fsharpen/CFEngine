@@ -1,0 +1,17 @@
+bundle agent openssl_dependency(param) {
+  vars:
+      "desired_packages" slist=> {"openssl","openssl-libs","openssl-devel"};
+      "map" slist => maparray("$($(param)[url])$(this.v)-$($(param)[version]).$($(param)[arch]).rpm",desired_packages);
+      "join_packages" string=> join(" ",map);
+
+  classes:
+      "not_need_upgrade" expression => returnszero("${paths.path[yum]} info $($(param)[name])-$($(param)[version]) >/dev/null 2>&1","useshell");
+
+  commands:
+    centos_7_2.!not_need_upgrade::
+      "${paths.path[yum]} -y install $(join_packages)";
+
+  reports:
+    need_upgrade::
+      "Install openssl 1.0.2k";
+}

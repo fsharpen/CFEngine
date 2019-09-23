@@ -1,0 +1,19 @@
+###############################################################################
+#
+# bundle agent main
+#  - User/Site policy entry
+#
+###############################################################################
+bundle agent main
+{
+
+  classes:
+      "is_mail_server" expression => classmatch(".*_mal01");
+
+  methods:
+      "package_vars" usebundle=> package_vars;
+    is_mail_server::
+      "openssl_dependency" usebundle=> openssl_dependency("package_vars.openssl");
+      "package_upgrade" usebundle=> package_upgrade("package_vars.exim");
+
+}

@@ -1,0 +1,24 @@
+bundle agent package_upgrade(param) {
+  classes:
+      "not_need_upgrade" expression => returnszero("${paths.path[yum]} info $($(param)[name])-$($(param)[version]) | grep Installed >/dev/null 2>&1","useshell");
+
+  packages:
+    centos.!not_need_upgrade::
+      "$($(param)[name])"
+        policy => "present",
+        package_module => yum,
+        architecture => "x86_64",
+        version => "$($(param)[version])",
+        classes => if_ok("restart_service");
+
+  services:
+    restart_service.systemd::
+      "$($(param)[name])"
+        service_policy => "restart";
+
+  reports:
+    restart_service::
+      "$($(param)[name]) is upgraded to $($(param)[version])";
+    not_need_upgrade::
+     "Do not need to upgrade, the current version is $($(param)[name])-$($(param)[version])";
+}

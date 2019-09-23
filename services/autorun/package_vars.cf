@@ -1,0 +1,10 @@
+bundle agent package_vars
+{
+  vars:
+      "exim[name]" string => "exim";
+      "exim[version]" string => "4.92-1.el7";
+      "openssl[name]" string=> "openssl-libs";
+      "openssl[version]" string=> "1.0.2k-16.el7";
+      "openssl[arch]" string => "x86_64";
+      "openssl[url]" string =>"http://mirrors.163.com/centos/7.6.1810/os/x86_64/Packages/";
+}
